@@ -28,10 +28,11 @@ request('http://docs.house.gov/floor/', function(err, resp, body){
 			var fileExt = url.substr(url.lastIndexOf('.')+1);
 			if(fileExt == "pdf"){
 			//trying to make more meaningful name with bill #
-			var name = $(this).closest('.legisNum');
-			var bill = $(name).text();
-			console.log(bill);
-			var file = fs.createWriteStream(i + ".pdf")
+			var name = $(this).closest("tr");
+			var bill = $(name).find("td:first-child");
+			var billText = $(bill).text();
+			console.log(billText);
+			var file = fs.createWriteStream(billText + ".pdf")
 			var request = http.get(url, function(response) {
 			  response.pipe(file);
 			});
