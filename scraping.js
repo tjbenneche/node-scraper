@@ -19,17 +19,13 @@ request('http://docs.house.gov/floor/', function(err, resp, body){
 	if(!err && resp.statusCode == 200){
 		var $ = cheerio.load(body);
 		
-		var title = $("#primaryContent > h1").text();
-		//var name = $(title).toString();
-		var spans = $('.lastUpdated').toString();
-		var extraText = 'Text of Bills for the Week of';
-		var h1close = '</h1>';
-		var week = title.replace(spans,'');
-		week.replace(extraText, '');
-		week.replace(h1close, '');
-		week = './' + week;
-		console.log(week);
-
+		// var title = $("#primaryContent > h1").text();
+		// 		var name = $(title).toString();
+		// 		var spans = $('.lastUpdated').toString();
+		// 		var extraText = 'Text of Bills for the Week of';
+		// 		var week = title.replace(spans,'');
+		// 		week.replace(extraText, '');
+		week = './1-13-14/';
 		fs.mkdir(week, "0777");
 		
 		$('a', '.floorItem').each(function(){
@@ -41,10 +37,12 @@ request('http://docs.house.gov/floor/', function(err, resp, body){
 			var bill = $(name).find("td:first-child");
 			var billText = $(bill).text();
 			console.log(billText);
+			process.chdir('./' + week);
 			var file = fs.createWriteStream(billText + ".pdf")
 			var request = http.get(url, function(response) {
 			  response.pipe(file);
 			});
+			process.chdir('../');
 		}
 			urls.push(url);
 		});
